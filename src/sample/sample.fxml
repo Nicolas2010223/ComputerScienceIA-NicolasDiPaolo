@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
-<GridPane alignment="center" hgap="10" prefHeight="300.0" prefWidth="380.0" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="sample.Controller">
+<GridPane alignment="center" hgap="10" prefHeight="300.0" prefWidth="380.0" vgap="10" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
@@ -28,19 +27,14 @@
       <AnchorPane fx:id="newPanel" prefHeight="313.0" prefWidth="466.0" visible="false">
          <children>
             <Label layoutX="120.0" layoutY="25.0" text="Welcome to the Schedule!" />
-            <TableView layoutX="8.0" layoutY="66.0" prefHeight="200.0" prefWidth="374.0">
+            <ProgressBar layoutX="95.0" layoutY="266.0" prefWidth="200.0" progress="0.0" />
+            <TableView fx:id="tableView" editable="true" layoutX="20.0" layoutY="50.0" prefHeight="200.0" prefWidth="333.0">
               <columns>
-                <TableColumn prefWidth="53.0" text="Monday" />
-                <TableColumn prefWidth="57.0" text="Tuesday" />
-                  <TableColumn prefWidth="55.0" text="Thursday" />
-                  <TableColumn prefWidth="43.0" text="Wednesday" />
-                  <TableColumn prefWidth="39.0" text="Thursday" />
-                  <TableColumn minWidth="0.0" prefWidth="47.0" text="Friday" />
-                  <TableColumn prefWidth="38.0" text="Saturday" />
-                  <TableColumn prefWidth="75.0" text="Sunday" />
+                <TableColumn fx:id="time" prefWidth="95.0" text="Time" />
+                <TableColumn fx:id="activity" text="Activity" />
+                  <TableColumn fx:id="description" prefWidth="75.0" text="Description" />
               </columns>
             </TableView>
-            <ProgressBar layoutX="95.0" layoutY="266.0" prefWidth="200.0" progress="0.0" />
          </children>
       </AnchorPane>
    </children>
