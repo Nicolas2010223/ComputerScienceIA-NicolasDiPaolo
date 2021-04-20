@@ -1,87 +1,109 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javax.swing.*;
+import java.util.Optional;
 
 
 public class Controller {
-    @FXML
-    private AnchorPane mainPanel;
-    @FXML
-    private AnchorPane newPanel;
-    @FXML
-    private TableView<Person> tableView;
-    @FXML
-    private TableColumn<Person, String> time;
-    @FXML
-    private TableColumn<Person, String> activity;
-    @FXML
-    private TableColumn<Person, String> description;
-    public static class TableViewSample extends Application {
+    @FXML private ComboBox comboBox;
+    @FXML private AnchorPane mainPanel;
+    @FXML private AnchorPane newPanel;
+    @FXML private TableView<Activity> tableView;
 
-        private TableView table = new TableView();
-        public static void main(String[] args) {
-            launch(args);
+    private final ObservableList<Activity> data = FXCollections.observableArrayList();
+
+
+        public void initialize() {
+
+            tableView.setEditable(true);
+            TableColumn timeCol = new TableColumn("Time");
+            TableColumn activityCol = new TableColumn("Activity");
+            TableColumn descriptionCol = new TableColumn("Description");
+
+            timeCol.setMinWidth(100);
+            timeCol.setCellValueFactory(
+                    new PropertyValueFactory<Activity, String>("time"));
+
+            activityCol.setMinWidth(100);
+            activityCol.setCellValueFactory(
+                    new PropertyValueFactory<Activity, String>("activity"));
+
+            descriptionCol.setMinWidth(200);
+            descriptionCol.setCellValueFactory(
+                    new PropertyValueFactory<Activity, String>("description"));
+
+            tableView.setItems(data);
+            tableView.getColumns().addAll(timeCol, activityCol, descriptionCol);
+
+            // ComboBox<String> comboBox = new ComboBox<>();
+
+            comboBox.getItems().addAll(
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday" ,
+                    "Friday",
+                    "Saturday",
+                    "Sunday"
+            );
+            comboBox.setPromptText("What´s the day today?");
+
         }
 
-        @Override
-        public void start(Stage stage) {
-            Scene scene = new Scene(new Group());
-            stage.setTitle("Schedule");
-            stage.setWidth(300);
-            stage.setHeight(500);
-
-           ObservableList<Activity> data =
-                    FXCollections.observableArrayList(
-                            new Activity(8,  "CS", "CS 2" ),
-            new Activity(6,  "Alvaroooo", "Te quiero" )
 
 
+        public void addNewActivity (ActionEvent actionEvent){
+            Dialog<Activity> dialog= new Dialog<>();
+            dialog.setTitle("Add new Activity");
+            DialogPane dialogPane = dialog.getDialogPane();
+            dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            TextField timeTextField = new TextField("time");
+            TextField activityTextField = new TextField("activity");
+            TextField descriptionTextField = new TextField("description");
 
-                    );
-
-            final Label label = new Label("Address Book");
-            label.setFont(new Font("Arial", 20));
-
-            table.setEditable(true);
-
-            TableColumn time = new TableColumn("Time");
-            time.setCellValueFactory(
-                    new PropertyValueFactory<Activity, String>("8"));
-            TableColumn activity = new TableColumn("Activity");
-            TableColumn description = new TableColumn("Description");
-
-            table.setItems(data);
-            table.getColumns().addAll(time, activity, description);
-
-            final VBox vbox = new VBox();
-            vbox.setSpacing(5);
-            vbox.setPadding(new Insets(10, 0, 0, 10));
-            vbox.getChildren().addAll(label, table);
-
-            ((Group) scene.getRoot()).getChildren().addAll(vbox);
-
-            stage.setScene(scene);
-            stage.show();
+            dialogPane.setContent(new VBox(8, timeTextField, activityTextField, descriptionTextField));
+            Platform.runLater(timeTextField::requestFocus);
+            final Button btOk = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+            btOk.addEventFilter(
+                    ActionEvent.ACTION,
+                    event -> {
+                        if (!timeTextField.getText().equals("")&&!activityTextField.getText().equals("")&&!descriptionTextField.getText().equals("")) {
+                            data.add(new Activity(timeTextField.getText(), activityTextField.getText(), descriptionTextField.getText()));
+                        } else{
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Incorrect Information");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Type the time, activity and description");
+                            alert.showAndWait();
+                            event.consume();
+                        }
+                    }
+            );
+            dialog.showAndWait();
         }
-    }
+
+
+
+
 
 
 

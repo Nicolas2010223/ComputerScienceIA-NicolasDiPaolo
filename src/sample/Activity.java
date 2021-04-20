@@ -1,21 +1,21 @@
 package sample;
 
 public class Activity {
-    int time;
+    String time;
     String activity;
     String description;
 
-    public Activity(int time, String activity, String description) {
+    public Activity(String time, String activity, String description) {
         this.time = time;
         this.activity = activity;
         this.description = description;
     }
 
-    public int getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
