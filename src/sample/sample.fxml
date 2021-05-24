@@ -25,7 +25,7 @@
             <Label fx:id="dateTime" layoutX="130.0" layoutY="58.0" text="Label" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="newPanel" prefHeight="313.0" prefWidth="466.0" visible="false">
+      <AnchorPane fx:id="newPanel" prefHeight="313.0" prefWidth="466.0">
          <children>
             <Label layoutX="20.0" layoutY="25.0" text="Welcome to the Schedule!" />
             <TableView fx:id="tableView" editable="true" layoutX="20.0" layoutY="50.0" prefHeight="200.0" prefWidth="333.0" />
@@ -34,13 +34,14 @@
             <CheckBox fx:id="editBtn" layoutX="278.0" layoutY="267.0" mnemonicParsing="false" onAction="#editBtn" text="Non-Editable" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="mondayPanel" layoutX="10.0" layoutY="10.0" prefHeight="313.0" prefWidth="466.0">
+      <AnchorPane fx:id="mondayPanel" layoutX="10.0" layoutY="10.0" prefHeight="313.0" prefWidth="466.0" visible="false">
          <children>
             <Label layoutX="20.0" layoutY="25.0" text="Welcome to Monday!" />
             <Button fx:id="newActivity1" layoutX="144.0" layoutY="263.0" mnemonicParsing="false" onAction="#addNewActivity" text="Add new Activity" />
             <CheckBox fx:id="editBtn1" layoutX="278.0" layoutY="267.0" mnemonicParsing="false" onAction="#editBtn" text="Non-Editable" />
             <Button fx:id="returnBtn" layoutX="20.0" layoutY="263.0" mnemonicParsing="false" onAction="#returnValue" text="Return" />
             <TableView fx:id="tableView1" editable="true" layoutX="20.0" layoutY="50.0" prefHeight="200.0" prefWidth="333.0" />
+            <Button layoutX="312.0" layoutY="21.0" mnemonicParsing="false" onAction="#saveObjects" text="Save" />
          </children>
       </AnchorPane>
    </children>

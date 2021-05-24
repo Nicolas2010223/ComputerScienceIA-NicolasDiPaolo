@@ -1,5 +1,8 @@
 package sample;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -25,6 +28,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -38,6 +44,8 @@ public class Controller {
     @FXML
     private ComboBox comboBox;
     @FXML
+    private ComboBox comboBox1;
+    @FXML
     private AnchorPane mainPanel;
     @FXML
     private AnchorPane newPanel;
@@ -50,13 +58,58 @@ public class Controller {
     @FXML
     Label dateTime;
 
-    private final ObservableList<Activity> data = FXCollections.observableArrayList();
 
+    public  ObservableList<Activity> Monday = FXCollections.observableArrayList();
+    private ObservableList<Activity> Tuesday = FXCollections.observableArrayList();
+    private ObservableList<Activity> Wednesday = FXCollections.observableArrayList();
+    private ObservableList<Activity> Thursday = FXCollections.observableArrayList();
+    private ObservableList<Activity> Friday = FXCollections.observableArrayList();
+    private ObservableList<Activity> Saturday = FXCollections.observableArrayList();
+    private ObservableList<Activity> Sunday = FXCollections.observableArrayList();
+    private ArrayList<ObservableList<Activity>> days = new ArrayList<>();
+    private String[] dayNames = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
+    //days.get(0) = monday etc
+
+
+    //etc
     TableColumn timeCol = new TableColumn("Time");
     TableColumn activityCol = new TableColumn("Activity");
     TableColumn descriptionCol = new TableColumn("Description");
 
+    public Controller() throws FileNotFoundException {
+    }
+
     public void initialize() {
+        days.add(Monday);
+        days.add(Tuesday);
+        days.add(Wednesday);
+        days.add(Thursday);
+        days.add(Friday);
+        days.add(Saturday);
+        days.add(Sunday);
+
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+
+        //open and read Json for any previously saved data.
+
+        for(int i =0; i<7;i++){
+
+            try (Reader reader = new FileReader(dayNames[i] + ".json")) {
+            // Convert JSON File to Java Object
+                ObservableList<Activity> input = gson.fromJson(reader, new TypeToken<ObservableList<Activity>>() {}.getType());
+                for (Activity a: input ) {
+                    System.out.println(a.getActivity());
+                }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         timeCol.setMinWidth(100);
         timeCol.setCellValueFactory(
@@ -70,8 +123,10 @@ public class Controller {
         descriptionCol.setCellValueFactory(
                 new PropertyValueFactory<Activity, String>("description"));
 
-        tableView.setItems(data);
+        tableView.setItems(days.get(0));
         tableView.getColumns().addAll(timeCol, activityCol, descriptionCol);
+
+
 
         // ComboBox<String> comboBox = new ComboBox<>();
 
@@ -85,7 +140,6 @@ public class Controller {
                 "Sunday"
         );
         comboBox.setPromptText("What´s the day today?");
-
 
         activityCol.setCellFactory(TextFieldTableCell.forTableColumn());
         activityCol.setOnEditCommit(
@@ -158,7 +212,11 @@ public class Controller {
         }), new KeyFrame(javafx.util.Duration.seconds(1)));
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
+
+
     }
+
+
 
 
     public void addNewActivity(ActionEvent actionEvent) {
@@ -177,7 +235,25 @@ public class Controller {
                 ActionEvent.ACTION,
                 event -> {
                     if (!timeTextField.getText().equals("") && !activityTextField.getText().equals("") && !descriptionTextField.getText().equals("")) {
-                        data.add(new Activity(timeTextField.getText(), activityTextField.getText(), descriptionTextField.getText()));
+                        //if the day selected in monday add it to monday
+                        //if the day selected in tuesday add it to tuesday
+                        ArrayList<String> week = new ArrayList<String>();
+                        week.add("Monday");
+                        week.add("Tuesday");
+                        week.add("Wednesday");
+                        week.add("Thursday");
+                        week.add("Friday");
+                        week.add("Saturday");
+                        week.add("Sunday");
+
+                        {
+                }
+    
+
+                        //combobox index 0-6
+                        //data[combobox.selected].add
+
+                        days.get(0).add(new Activity(timeTextField.getText(), activityTextField.getText(), descriptionTextField.getText()));
                     } else {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Incorrect Information");
@@ -198,10 +274,15 @@ public class Controller {
             tableView.setEditable(true);
         }
     }
-    public void newClick (ActionEvent actionEvent) {
+    public void newClick (ActionEvent actionEvent) {  //main panel button
+        comboBox1.onMouseClickedProperty();
+        mainPanel.setVisible(false);
+        newPanel.setVisible(true);
+    }
+    public void newClick2 (ActionEvent actionEvent) {  //day button
         comboBox.onMouseClickedProperty();
-        newPanel.setVisible(false);
-        mondayPanel.setVisible(true);
+        //when you click a button change the data of the table to the correct arraylist
+
     }
 
     public void newWindowBtn(ActionEvent actionEvent) {
@@ -211,6 +292,18 @@ public class Controller {
     public void returnValue (ActionEvent actionEvent){
         newPanel.setVisible(true);
         mondayPanel.setVisible(false);
+    }
+
+    public void saveObjects(ActionEvent actionEvent) throws IOException {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        for(int i =0; i<7;i++){
+            try (FileWriter writer = new FileWriter(dayNames[i] +".json")) {
+                gson.toJson(days.get(i), writer);
+                System.out.println("Saved.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
