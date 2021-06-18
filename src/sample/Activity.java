@@ -4,6 +4,25 @@ public class Activity {
     String time;
     String activity;
     String description;
+    Boolean completed = false;
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
+    }
+
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+
+    //boolean completed or not. Starts at false. When it is completed change to true.
+    //loop activity
+    //activityCompleted if true
+    //reset
+    //activity.getNext()
+
+    //at the beginning of every week (monday) yuo can reset all activities to false.
+    //or just make a button for the client to click at the start of the week... (Easier)
 
     public Activity(String time, String activity, String description) {
         this.time = time;

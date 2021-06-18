@@ -29,15 +29,13 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
 
 import javax.swing.*;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
-import java.util.ResourceBundle;
 
 
 public class Controller {
@@ -57,6 +55,9 @@ public class Controller {
     private TableView<Activity> tableView1;
     @FXML
     Label dateTime;
+    @FXML
+    Label newActivityLabel;
+    @FXML CheckBox activityCompletedChkBox;
 
 
     public  ObservableList<Activity> Monday = FXCollections.observableArrayList();
@@ -75,6 +76,7 @@ public class Controller {
     TableColumn timeCol = new TableColumn("Time");
     TableColumn activityCol = new TableColumn("Activity");
     TableColumn descriptionCol = new TableColumn("Description");
+
 
     public Controller() throws FileNotFoundException {
     }
@@ -98,10 +100,10 @@ public class Controller {
 
             try (Reader reader = new FileReader(dayNames[i] + ".json")) {
             // Convert JSON File to Java Object
-                ObservableList<Activity> input = gson.fromJson(reader, new TypeToken<ObservableList<Activity>>() {}.getType());
-                for (Activity a: input ) {
-                    System.out.println(a.getActivity());
-                }
+                ArrayList<Activity> input = gson.fromJson(reader, new TypeToken<ArrayList<Activity>>() {}.getType());
+
+                days.set(i,FXCollections.observableArrayList(input));
+
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -140,6 +142,11 @@ public class Controller {
                 "Sunday"
         );
         comboBox.setPromptText("What´s the day today?");
+
+        // you can find the selected day to access which activities there are.
+        //you have an arraylist of activities so you know how many activities there are. X
+
+
 
         activityCol.setCellFactory(TextFieldTableCell.forTableColumn());
         activityCol.setOnEditCommit(
@@ -180,10 +187,22 @@ public class Controller {
 
         initClock();
         setClick();
+
+        //when the program starts figure out which day it is to get the list of activities from that day.
+       int i = 0; //the correct day number after you find it //0 is monmday 1 is tuesday etc
+        for (Activity ac: days.get(i)) {
+            myQueue.add(ac);
+        }
+        // System.out.println((String) myQueue.pop());
+                          //day  //activity number
+       // String cActivity = (String) myQueue.pop();
+        cActivity = myQueue.pop();
+       newActivityLabel.setText(cActivity.getActivity());
+        //label text =  myQueue.pop()
+
     }
-
-
-
+    public static Activity cActivity;
+    public static LinkedList<Activity> myQueue = new LinkedList<>();
 
     public void setClick() {
         activityCol.setCellFactory(tc -> {
@@ -204,20 +223,75 @@ public class Controller {
             return cell;
         });
     }
+    //in the initualizer or after all activities are made. or when a new activity is made
+    //queue
+
+    //get today , e/g monday
+    //get the list of activities for monday
+
+    //add all activites to the queue one by one
+    //dequeue to add it to the to do text.
+
+
+    //in the checkbox action
+    //when the tickbox is ticked the activity is complete.
+    //dequeue to get the next item in the queue and show it in the to do box.
 
     private void initClock() {
         Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             dateTime.setText(LocalDateTime.now().format(formatter));
+            updateProgresBar();//this checks how many activities are completed today and updates the progress bar.
+            //Activity.resetNext()
+
+            //loop while Activity.hasNext();
+                //currentActivity = Activity.getNext
+                //Output currentActivity
+                //if currentActivity.isResolved=true && activity.hasNext=true
+                    //then continue with next activity
+                //else if  currentActivity.isResolved = false
+                    //do nothing and wait with current activity
+                //else if currentActivity.isResolved=true && activity.hasNext=false
+                    //break because there are no move activites
+                 // End if
+            //End loop
+
+            checkIfOnTask();
         }), new KeyFrame(javafx.util.Duration.seconds(1)));
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
 
 
+
+
+    }
+    public void checkIfOnTask() {
+
+        //find the current task based on the times of activities and compare to system time
+        //make a pop up window appear to ask the client if they are on task
+
+        // copy time, activity and description table to the main panel
+        //loop
+        //if task.completed is false then
+        //display the first task on the day
+        //if task.completed is true then
+        //display the second task on the day
+        // end loop if all tasks are completed
+        //return "You have finished all of your activities"
+
+
+        //clicnet will tick true /false to change that activities boolean.
+
     }
 
+    public void updateProgresBar(){
+        //get today from the system. (monday tuesday etc.)
+        //or ask the user what day it is from the combo box [0, 6]
+        //integer = get the total number of items in days.get(day)
+        //get the total completedOrNot boolean from the activities.
 
-
+        ///progress bar = 100% / integer of total number of items. multiplied by how many items are complete.
+    }
 
     public void addNewActivity(ActionEvent actionEvent) {
         Dialog<Activity> dialog = new Dialog<>();
@@ -237,23 +311,17 @@ public class Controller {
                     if (!timeTextField.getText().equals("") && !activityTextField.getText().equals("") && !descriptionTextField.getText().equals("")) {
                         //if the day selected in monday add it to monday
                         //if the day selected in tuesday add it to tuesday
-                        ArrayList<String> week = new ArrayList<String>();
-                        week.add("Monday");
-                        week.add("Tuesday");
-                        week.add("Wednesday");
-                        week.add("Thursday");
-                        week.add("Friday");
-                        week.add("Saturday");
-                        week.add("Sunday");
+
+
 
                         {
                 }
-    
+                        days.get(comboBox.getSelectionModel().getSelectedIndex()).add(new Activity(timeTextField.getText(), activityTextField.getText(), descriptionTextField.getText()));
+
 
                         //combobox index 0-6
                         //data[combobox.selected].add
 
-                        days.get(0).add(new Activity(timeTextField.getText(), activityTextField.getText(), descriptionTextField.getText()));
                     } else {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Incorrect Information");
@@ -274,8 +342,10 @@ public class Controller {
             tableView.setEditable(true);
         }
     }
-    public void newClick (ActionEvent actionEvent) {  //main panel button
-        comboBox1.onMouseClickedProperty();
+
+    public void DaySelectedAction (ActionEvent actionEvent) { //when you click the day combo box.
+        tableView.setItems(days.get(comboBox.getSelectionModel().getSelectedIndex()));
+        comboBox.onMouseClickedProperty();
         mainPanel.setVisible(false);
         newPanel.setVisible(true);
     }
@@ -306,4 +376,17 @@ public class Controller {
         }
     }
 
+    public void activityCompletedBtn(ActionEvent actionEvent) {
+
+        try{
+            cActivity.setCompleted(true); //set the activity to completed.
+            cActivity = myQueue.pop(); //get the next activity
+            newActivityLabel.setText(cActivity.getActivity());
+            activityCompletedChkBox.setSelected(false); //un tick the checkbox
+        }catch(Exception e){
+            newActivityLabel.setText("No more activities for today!");
+        }
+
+
+    }
 }
