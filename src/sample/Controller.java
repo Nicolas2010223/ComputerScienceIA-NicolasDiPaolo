@@ -1,5 +1,4 @@
 package sample;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -39,6 +38,7 @@ import java.time.format.DateTimeFormatter;
 
 
 public class Controller {
+    @FXML public ProgressBar MyProgressBar;
     @FXML
     private ComboBox comboBox;
     @FXML
@@ -58,6 +58,8 @@ public class Controller {
     @FXML
     Label newActivityLabel;
     @FXML CheckBox activityCompletedChkBox;
+
+
 
 
     public  ObservableList<Activity> Monday = FXCollections.observableArrayList();
@@ -241,7 +243,7 @@ public class Controller {
         Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             dateTime.setText(LocalDateTime.now().format(formatter));
-            updateProgresBar();//this checks how many activities are completed today and updates the progress bar.
+            updateProgressBar();//this checks how many activities are completed today and updates the progress bar.
             //Activity.resetNext()
 
             //loop while Activity.hasNext();
@@ -284,13 +286,25 @@ public class Controller {
 
     }
 
-    public void updateProgresBar(){
+    public void updateProgressBar(){
+
+
+           // JProgressBar progressBar = this.progressBar;
+        //current progress = 100  / total tasks  * tasks compelted.
+        //progress
+      }
+
+
+
         //get today from the system. (monday tuesday etc.)
         //or ask the user what day it is from the combo box [0, 6]
         //integer = get the total number of items in days.get(day)
         //get the total completedOrNot boolean from the activities.
 
         ///progress bar = 100% / integer of total number of items. multiplied by how many items are complete.
+
+
+    private void getClass(Activity cActivity) {
     }
 
     public void addNewActivity(ActionEvent actionEvent) {
@@ -382,6 +396,7 @@ public class Controller {
             cActivity.setCompleted(true); //set the activity to completed.
             cActivity = myQueue.pop(); //get the next activity
             newActivityLabel.setText(cActivity.getActivity());
+            updateProgressBar();
             activityCompletedChkBox.setSelected(false); //un tick the checkbox
         }catch(Exception e){
             newActivityLabel.setText("No more activities for today!");

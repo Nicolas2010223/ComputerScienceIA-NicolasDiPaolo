@@ -1,12 +1,15 @@
 [
+  {},
   {
-    "time": "9:00",
-    "activity": "Eat",
-    "description": "Eat Pizza!"
+    "time": "7 pm",
+    "activity": "Create my video ",
+    "description": "Video for my client ",
+    "completed": false
   },
   {
-    "time": "91:00",
-    "activity": "Eaeeeet",
-    "description": "Eat Pizzaaaaaa!"
+    "time": "More activity",
+    "activity": "Eat",
+    "description": "Pizza",
+    "completed": false
   }
 ]

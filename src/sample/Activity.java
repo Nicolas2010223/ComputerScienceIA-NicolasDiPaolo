@@ -1,10 +1,10 @@
 package sample;
 
 public class Activity {
-    String time;
-    String activity;
-    String description;
-    Boolean completed = false;
+    private String time;
+    private String activity;
+    private String description;
+    private Boolean completed = false;
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
