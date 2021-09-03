@@ -25,22 +25,24 @@
             <Label layoutX="85.0" layoutY="22.0" text="Welcome to your personalized Agenda!" />
             <Button layoutX="130.0" layoutY="248.0" mnemonicParsing="false" onAction="#newWindowBtn" text="Go to the schedule " />
             <Label fx:id="dateTime" layoutX="130.0" layoutY="58.0" text="Label" />
-            <ProgressBar fx:id="MyProgressBar" layoutX="93.0" layoutY="169.0" prefWidth="200.0" />
+            <ProgressBar fx:id="MyProgressBar" layoutX="93.0" layoutY="169.0" prefWidth="200.0" progress="1.0" />
             <CheckBox fx:id="activityCompletedChkBox" layoutX="142.0" layoutY="195.0" mnemonicParsing="false" onAction="#activityCompletedBtn" text="Completed?" />
-            <Label fx:id="newActivityLabel" layoutX="170.0" layoutY="99.0" text="Label">
+            <Label fx:id="newActivityLabel" alignment="CENTER" layoutX="170.0" layoutY="99.0" text="Label">
                <font>
                   <Font name="Times New Roman" size="20.0" />
                </font></Label>
+            <Button fx:id="newMessage" layoutX="14.0" layoutY="75.0" mnemonicParsing="false" onAction="#newMessage" prefHeight="72.0" prefWidth="80.0" text="Click Here!" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="newPanel" prefHeight="313.0" prefWidth="466.0" visible="false">
          <children>
-            <Label layoutX="20.0" layoutY="25.0" text="Welcome to the Schedule!" />
-            <TableView fx:id="tableView" editable="true" layoutX="20.0" layoutY="50.0" prefHeight="200.0" prefWidth="333.0" />
+            <Label layoutX="20.0" layoutY="40.0" text="Welcome to the Schedule!" />
+            <TableView fx:id="tableView" editable="true" layoutX="20.0" layoutY="58.0" prefHeight="200.0" prefWidth="333.0" />
             <Button fx:id="newActivity" layoutX="144.0" layoutY="263.0" mnemonicParsing="false" onAction="#addNewActivity" text="Add new Activity" />
             <ComboBox fx:id="comboBox" layoutX="203.0" layoutY="21.0" onAction="#DaySelectedAction" prefWidth="150.0" />
             <CheckBox fx:id="editBtn" layoutX="278.0" layoutY="267.0" mnemonicParsing="false" onAction="#editBtn" text="Non-Editable" />
             <Button layoutX="20.0" layoutY="263.0" mnemonicParsing="false" onAction="#saveObjects" text="Save" />
+            <Button fx:id="returnBtn" layoutX="14.0" layoutY="2.0" mnemonicParsing="false" onAction="#returnBtn" text="Return" />
          </children>
       </AnchorPane>
    </children>

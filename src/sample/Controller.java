@@ -28,6 +28,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.*;
 
 import javax.swing.*;
@@ -57,7 +59,10 @@ public class Controller {
     Label dateTime;
     @FXML
     Label newActivityLabel;
-    @FXML CheckBox activityCompletedChkBox;
+    @FXML
+    CheckBox activityCompletedChkBox;
+
+
 
 
 
@@ -195,15 +200,19 @@ public class Controller {
         for (Activity ac: days.get(i)) {
             myQueue.add(ac);
         }
+
         // System.out.println((String) myQueue.pop());
                           //day  //activity number
        // String cActivity = (String) myQueue.pop();
-        cActivity = myQueue.pop();
-       newActivityLabel.setText(cActivity.getActivity());
+
+        //myQueue = all activities
+        //cactivity means the current or completed activites. current is the last one.
+       newActivityLabel.setText(myQueue.peek().getActivity());
         //label text =  myQueue.pop()
 
     }
-    public static Activity cActivity;
+    public static LinkedList<Activity> cActivity = new LinkedList<>();
+
     public static LinkedList<Activity> myQueue = new LinkedList<>();
 
     public void setClick() {
@@ -287,11 +296,17 @@ public class Controller {
     }
 
     public void updateProgressBar(){
+        LocalDate today = LocalDate.now();
+        DayOfWeek dayOfWeek = DayOfWeek.from(today);
+        int todayNumber = 0; //dayOfWeek.getValue()-1;
 
-
-           // JProgressBar progressBar = this.progressBar;
-        //current progress = 100  / total tasks  * tasks compelted.
-        //progress
+      int totalTasksToday =  days.get(todayNumber).size();
+        System.out.println(totalTasksToday);
+       int tasksCompletedToday = cActivity.size();
+        System.out.println(tasksCompletedToday);
+       double currentProgress = (1.0/ totalTasksToday) * tasksCompletedToday;
+        System.out.println(currentProgress);
+        MyProgressBar.setProgress(currentProgress);
       }
 
 
@@ -348,6 +363,10 @@ public class Controller {
         );
         dialog.showAndWait();
     }
+    public void returnBtn (ActionEvent actionEvent){
+        newPanel.setVisible(false);
+        mainPanel.setVisible(true);
+    }
 
     public void editBtn(ActionEvent actionEvent) {
         if (tableView.isEditable()) {
@@ -373,10 +392,9 @@ public class Controller {
         mainPanel.setVisible(false);
         newPanel.setVisible(true);
     }
-    public void returnValue (ActionEvent actionEvent){
-        newPanel.setVisible(true);
-        mondayPanel.setVisible(false);
-    }
+
+
+
 
     public void saveObjects(ActionEvent actionEvent) throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -393,15 +411,23 @@ public class Controller {
     public void activityCompletedBtn(ActionEvent actionEvent) {
 
         try{
-            cActivity.setCompleted(true); //set the activity to completed.
-            cActivity = myQueue.pop(); //get the next activity
-            newActivityLabel.setText(cActivity.getActivity());
+            myQueue.getLast().setCompleted(true); //set the activity to completed.
+            cActivity.add(myQueue.pop()); //get the next activity
+            newActivityLabel.setText(myQueue.peek().getActivity());
             updateProgressBar();
+
             activityCompletedChkBox.setSelected(false); //un tick the checkbox
         }catch(Exception e){
             newActivityLabel.setText("No more activities for today!");
         }
 
 
+    }
+    public void newMessage (ActionEvent actionEvent) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Have a wonderful day!");
+        alert.setHeaderText(null);
+        alert.setContentText("You´re doing awesome, remember to check on your schedule");
+        alert.showAndWait();
     }
 }

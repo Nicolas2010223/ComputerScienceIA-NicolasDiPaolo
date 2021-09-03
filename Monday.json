@@ -1,5 +1,4 @@
 [
-  {},
   {
     "time": "7 pm",
     "activity": "Create my video ",
@@ -10,6 +9,18 @@
     "time": "More activity",
     "activity": "Eat",
     "description": "Pizza",
+    "completed": false
+  },
+  {
+    "time": "Advance",
+    "activity": "the",
+    "description": "Extended Essay",
+    "completed": true
+  },
+  {
+    "time": "time",
+    "activity": "activity",
+    "description": "description",
     "completed": false
   }
 ]
